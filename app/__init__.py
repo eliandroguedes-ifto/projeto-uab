@@ -6,11 +6,17 @@ from app.services import bcrypt
 
 load_dotenv()
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
+    
+    # Default Config
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'uma-chave-secreta-padrao')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///../instance/database.sqlite')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # Override with passed config
+    if config:
+        app.config.update(config)
 
     db.init_app(app)
     bcrypt.init_app(app)
