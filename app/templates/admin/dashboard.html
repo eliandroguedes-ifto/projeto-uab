@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard Admin</title>
-</head>
-<body>
-    <h2>Dashboard Admin</h2>
-    <ul>
-        <li>Abertos: {{ dados.abertos }}</li>
-        <li>Em Andamento: {{ dados.em_andamento }}</li>
-        <li>Resolvidos: {{ dados.resolvidos }}</li>
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Dashboard Admin{% endblock %}
+{% block content %}
+<h2>Dashboard Admin</h2>
+<ul>
+    <li>Abertos: {{ dados.abertos }}</li>
+    <li>Em Andamento: {{ dados.em_andamento }}</li>
+    <li>Resolvidos: {{ dados.resolvidos }}</li>
+</ul>
+{% endblock %}

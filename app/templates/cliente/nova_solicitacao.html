@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Nova Solicitação</title>
-</head>
-<body>
-    <h2>Nova Solicitação</h2>
-    <form method="POST">
-        <label>Assunto:</label><br>
-        <input type="text" name="assunto" required><br>
-        <label>Descrição:</label><br>
-        <textarea name="descricao" required></textarea><br>
-        <button type="submit">Enviar</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Nova Solicitação{% endblock %}
+{% block content %}
+<h2>Nova Solicitação</h2>
+<form method="POST">
+    <label>Assunto:</label><br>
+    <input type="text" name="assunto" required><br><br>
+    <label>Descrição:</label><br>
+    <textarea name="descricao" required style="width: 100%; height: 100px;"></textarea><br><br>
+    <button type="submit">Enviar</button>
+</form>
+{% endblock %}

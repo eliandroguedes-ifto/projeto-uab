@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Fila de Atendimento{% endblock %}
+{% block content %}
+<h2>Fila de Atendimento</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Assunto</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in solicitacoes %}
+        <tr>
+            <td>{{ s.id }}</td>
+            <td>{{ s.assunto }}</td>
+            <td class="status-{{ s.status }}">{{ s.status }}</td>
+            <td>{{ s.data_criacao.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td><a href="{{ url_for('main.responder_solicitacao_route', id=s.id) }}">Responder</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

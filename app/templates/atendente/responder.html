@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Responder Solicitação{% endblock %}
+{% block content %}
+<h2>Responder Solicitação #{{ solicitacao.id }}</h2>
+<p><strong>Assunto:</strong> {{ solicitacao.assunto }}</p>
+<p><strong>Descrição:</strong> {{ solicitacao.descricao }}</p>
+<hr>
+<form method="POST">
+    <label>Resposta:</label><br>
+    <textarea name="resposta" required style="width: 100%; height: 100px;"></textarea><br><br>
+    <label>Novo Status:</label><br>
+    <select name="status">
+        <option value="EM_ANDAMENTO">Em Andamento</option>
+        <option value="RESOLVIDO">Resolvido</option>
+    </select><br><br>
+    <button type="submit">Enviar Resposta</button>
+</form>
+{% endblock %}

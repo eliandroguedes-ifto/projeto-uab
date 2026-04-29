@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Sistema de Atendimento{% endblock %}</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        nav { margin-bottom: 20px; padding: 10px; background: #f0f0f0; }
+        .status-ABERTO { color: blue; }
+        .status-EM_ANDAMENTO { color: orange; }
+        .status-RESOLVIDO { color: green; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <nav>
+        <strong>Sistema de Atendimento</strong> | 
+        {% if session.usuario_id %}
+            <a href="{{ url_for('main.index') }}">Início</a> | 
+            <a href="{{ url_for('main.logout') }}">Sair</a>
+        {% else %}
+            <a href="{{ url_for('main.login') }}">Login</a>
+        {% endif %}
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+</html>

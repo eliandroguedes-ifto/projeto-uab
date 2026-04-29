@@ -27,7 +27,7 @@ def criar_solicitacao(cliente_id, assunto, descricao):
     return nova_solicitacao
 
 def responder_solicitacao(solicitacao_id, resposta, novo_status):
-    solicitacao = Solicitacao.query.get(solicitacao_id)
+    solicitacao = db.session.get(Solicitacao, solicitacao_id)
     if solicitacao:
         solicitacao.resposta_atendente = resposta
         solicitacao.status = novo_status
@@ -44,3 +44,9 @@ def obter_estatisticas_admin():
         'em_andamento': em_andamento,
         'resolvidos': resolvidos
     }
+
+def listar_solicitacoes_cliente(cliente_id):
+    return Solicitacao.query.filter_by(cliente_id=cliente_id).order_by(Solicitacao.data_criacao.desc()).all()
+
+def listar_fila_atendimento():
+    return Solicitacao.query.filter(Solicitacao.status.in_(['ABERTO', 'EM_ANDAMENTO'])).order_by(Solicitacao.data_criacao.asc()).all()
