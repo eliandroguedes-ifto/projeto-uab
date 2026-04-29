@@ -10,7 +10,7 @@ def login():
         if usuario:
             session['usuario_id'] = usuario.id
             session['perfil'] = usuario.perfil
-            return redirect(url_for('main.index'))
+            return redirect(url_for('main.index')) # Assumindo uma rota 'index'
         else:
             return render_template('login.html', erro="Credenciais inválidas")
     return render_template('login.html')
@@ -21,7 +21,7 @@ def nova_solicitacao():
         return redirect(url_for('main.login'))
     if request.method == 'POST':
         services.criar_solicitacao(session['usuario_id'], request.form['assunto'], request.form['descricao'])
-        return redirect(url_for('main.minhas_solicitacoes'))
+        return redirect(url_for('main.minhas_solicitacoes')) # Assumindo rota 'minhas_solicitacoes'
     return render_template('cliente/nova_solicitacao.html')
 
 @routes.route('/atendente/responder/<int:id>', methods=['POST'])
@@ -29,7 +29,7 @@ def responder_solicitacao_route(id):
     if 'perfil' not in session or session['perfil'] != 'ATENDENTE':
         return redirect(url_for('main.login'))
     services.responder_solicitacao(id, request.form['resposta'], request.form['status'])
-    return redirect(url_for('main.fila_atendimento'))
+    return redirect(url_for('main.fila_atendimento')) # Assumindo rota 'fila_atendimento'
 
 @routes.route('/admin/dashboard', methods=['GET'])
 def admin_dashboard():
@@ -49,6 +49,7 @@ def index():
             return redirect(url_for('main.admin_dashboard'))
     return redirect(url_for('main.login'))
 
+# Rotas placeholder para completude
 @routes.route('/cliente/minhas-solicitacoes')
 def minhas_solicitacoes():
     return "Página de Minhas Solicitações (Implementar)"

@@ -1,35 +1,25 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 import os
-from dotenv import load_dotenv
-from app.models import db
-from app.services import bcrypt
+from flask_bcrypt import Bcrypt
 
-load_dotenv()
+db = SQLAlchemy()
+bcrypt = Bcrypt()
 
-def create_app(config=None):
+def create_app():
     app = Flask(__name__)
-    
-    # Default Config
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'uma-chave-secreta-padrao')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///../instance/database.sqlite')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    # Override with passed config
-    if config:
-        app.config.update(config)
 
     db.init_app(app)
     bcrypt.init_app(app)
 
     with app.app_context():
-        from app import models
-        # Ensure the instance folder exists
-        if not os.path.exists('instance'):
-            os.makedirs('instance')
-            
-        db.create_all()
+        from app import models # Importar models para que db.create_all() funcione
+        db.create_all() # Cria o arquivo SQLite e as tabelas se não existirem
 
-        # Seed Admin
+        # Rotina de Seed do Administrador
         admin_email = os.getenv('ADMIN_INITIAL_EMAIL')
         admin_password = os.getenv('ADMIN_INITIAL_PASSWORD')
 
@@ -39,7 +29,7 @@ def create_app(config=None):
             db.session.add(usuario_admin)
             db.session.commit()
 
-    from app.routes import routes as main_routes
+    from app.routes import routes as main_routes # Renomeado para evitar conflito
     app.register_blueprint(main_routes)
 
     return app

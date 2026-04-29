@@ -76,6 +76,7 @@ Para executar a suíte de testes automatizada, utilize os seguintes comandos no 
 
 ```bash
 # Executar todos os testes
+export PYTHONPATH=$PYTHONPATH:.
 pytest
 
 # Executar testes com relatório de cobertura

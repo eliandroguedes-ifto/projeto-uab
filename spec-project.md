@@ -27,6 +27,9 @@ Abaixo está a especificação técnica detalhada, estruturada de forma determin
     Flask-Bcrypt==1.0.1
     python-dotenv==1.0.0
     gunicorn==21.2.0
+    pytest==7.4.3
+    pytest-mock==3.12.0
+    pytest-cov==4.1.0
     ```
 
 ### /.gitignore
@@ -46,7 +49,7 @@ Abaixo está a especificação técnica detalhada, estruturada de forma determin
     ```dockerfile
     FROM python:3.11-slim
     WORKDIR /app
-    COPY requirements.txt ./app/
+    COPY requirements.txt ./
     RUN pip install --no-cache-dir -r requirements.txt
     COPY . .
     EXPOSE 5000
@@ -68,7 +71,7 @@ Abaixo está a especificação técnica detalhada, estruturada de forma determin
         nome = db.Column(db.String(100), nullable=False)
         email = db.Column(db.String(128), unique=True, nullable=False)
         senha_hash = db.Column(db.String(256), nullable=False)
-        perfil = db.Column(db.String(2), nullable=False) # Valores permitidos: 'CLIENTE', 'ATENDENTE', 'ADMIN'
+        perfil = db.Column(db.String(10), nullable=False) # Valores permitidos: 'CLIENTE', 'ATENDENTE', 'ADMIN'
 
     class Solicitacao(db.Model):
         id = db.Column(db.Integer, primary_key=True, autoincrement=True)

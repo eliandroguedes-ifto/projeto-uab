@@ -1,13 +1,18 @@
 import pytest
+import os
+# Ensure environment variables are set BEFORE importing create_app if needed, 
+# but create_app reads them when called.
+os.environ['DATABASE_URI'] = 'sqlite:///:memory:'
+os.environ['SECRET_KEY'] = 'test-secret'
+
 from app import create_app, db
 from app.models import Usuario
 
 @pytest.fixture
 def app():
-    app = create_app({
+    app = create_app()
+    app.config.update({
         'TESTING': True,
-        'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
-        'SECRET_KEY': 'test-secret'
     })
 
     with app.app_context():

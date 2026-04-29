@@ -1,4 +1,5 @@
-from app.models import db, Usuario, Solicitacao
+from app import db
+from app.models import Usuario, Solicitacao
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 
