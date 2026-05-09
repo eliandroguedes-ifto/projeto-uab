@@ -1,27 +1,51 @@
 {% extends "base.html" %}
 {% block title %}Fila de Atendimento{% endblock %}
 {% block content %}
-<h2>Fila de Atendimento</h2>
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Assunto</th>
-            <th>Status</th>
-            <th>Data</th>
-            <th>Ação</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for s in solicitacoes %}
-        <tr>
-            <td>{{ s.id }}</td>
-            <td>{{ s.assunto }}</td>
-            <td class="status-{{ s.status }}">{{ s.status }}</td>
-            <td>{{ s.data_criacao.strftime('%d/%m/%Y %H:%M') }}</td>
-            <td><a href="{{ url_for('main.responder_solicitacao_route', id=s.id) }}">Responder</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fas fa-list-ul me-2"></i>Fila de Atendimento</h2>
+        <p class="text-muted">Chamados aguardando resposta ou em andamento.</p>
+    </div>
+</div>
+
+<div class="card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Assunto</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in solicitacoes %}
+                <tr>
+                    <td>#{{ s.id }}</td>
+                    <td>{{ s.assunto }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if s.status == 'ABERTO' %}bg-primary
+                            {% elif s.status == 'EM_ANDAMENTO' %}bg-warning text-dark
+                            {% else %}bg-success{% endif %}">
+                            {{ s.status }}
+                        </span>
+                    </td>
+                    <td>{{ s.data_criacao.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        <a href="{{ url_for('main.responder_solicitacao_route', id=s.id) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-reply me-1"></i>Responder
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if not solicitacoes %}
+    <p class="text-center text-muted">Nenhum chamado na fila.</p>
+    {% endif %}
+</div>
 {% endblock %}

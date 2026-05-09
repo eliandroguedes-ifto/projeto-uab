@@ -1,15 +1,47 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+
+{% block title %}Login - UAB Atendimento{% endblock %}
+
 {% block content %}
-<h2>Login</h2>
-{% if erro %}
-    <p style="color: red;">{{ erro }}</p>
-{% endif %}
-<form method="POST">
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br>
-    <label>Senha:</label><br>
-    <input type="password" name="senha" required><br><br>
-    <button type="submit">Entrar</button>
-</form>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="text-center mb-4">
+                <i class="fas fa-user-circle fa-4x text-primary"></i>
+                <h2 class="mt-2 fw-bold">Login</h2>
+            </div>
+
+            {% if erro %}
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>{{ erro }}
+                </div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" name="email" class="form-control" placeholder="seu@email.com" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Senha</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" name="senha" class="form-control" placeholder="Sua senha" required>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Entrar <i class="fas fa-sign-in-alt ms-2"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="text-center mt-3">
+            <p class="text-muted small">&copy; 2026 Sistema UAB</p>
+        </div>
+    </div>
+</div>
 {% endblock %}

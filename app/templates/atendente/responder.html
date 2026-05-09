@@ -1,18 +1,56 @@
 {% extends "base.html" %}
 {% block title %}Responder Solicitação{% endblock %}
 {% block content %}
-<h2>Responder Solicitação #{{ solicitacao.id }}</h2>
-<p><strong>Assunto:</strong> {{ solicitacao.assunto }}</p>
-<p><strong>Descrição:</strong> {{ solicitacao.descricao }}</p>
-<hr>
-<form method="POST">
-    <label>Resposta:</label><br>
-    <textarea name="resposta" required style="width: 100%; height: 100px;"></textarea><br><br>
-    <label>Novo Status:</label><br>
-    <select name="status">
-        <option value="EM_ANDAMENTO">Em Andamento</option>
-        <option value="RESOLVIDO">Resolvido</option>
-    </select><br><br>
-    <button type="submit">Enviar Resposta</button>
-</form>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="fw-bold"><i class="fas fa-reply me-2"></i>Responder Solicitação #{{ solicitacao.id }}</h2>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('main.fila_atendimento') }}">Fila</a></li>
+                    <li class="breadcrumb-item active">Responder</li>
+                  </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-4">
+            <h5 class="fw-bold border-bottom pb-2 mb-3">Detalhes do Chamado</h5>
+            <div class="mb-3">
+                <label class="text-muted small d-block">Assunto</label>
+                <span class="fs-5 fw-medium">{{ solicitacao.assunto }}</span>
+            </div>
+            <div class="mb-3">
+                <label class="text-muted small d-block">Descrição</label>
+                <div class="p-3 bg-light rounded border">
+                    {{ solicitacao.descricao }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-4">
+            <h5 class="fw-bold border-bottom pb-2 mb-3">Sua Resposta</h5>
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Mensagem de Resposta</label>
+                    <textarea name="resposta" class="form-control" rows="5" placeholder="Escreva aqui a solução ou atualização..." required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Atualizar Status para</label>
+                    <select name="status" class="form-select">
+                        <option value="EM_ANDAMENTO" {% if solicitacao.status == 'EM_ANDAMENTO' %}selected{% endif %}>Em Andamento</option>
+                        <option value="RESOLVIDO" {% if solicitacao.status == 'RESOLVIDO' %}selected{% endif %}>Resolvido</option>
+                    </select>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane me-1"></i>Enviar Resposta
+                    </button>
+                    <a href="{{ url_for('main.fila_atendimento') }}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

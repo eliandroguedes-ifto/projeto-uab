@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Minhas Solicitações{% endblock %}
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold"><i class="fas fa-history me-2"></i>Minhas Solicitações</h2>
+        <p class="text-muted">Acompanhe o andamento dos seus chamados.</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{{ url_for('main.nova_solicitacao') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Nova Solicitação
+        </a>
+    </div>
+</div>
+
+<div class="card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+             <thead class="table-light">
+                 <tr>
+                     <th>ID</th>
+                     <th>Assunto</th>
+                     <th>Status</th>
+                     <th>Data</th>
+                     <th>Resposta do Atendente</th>
+                 </tr>
+             </thead>
+             <tbody>
+                 {% for s in solicitacoes %}
+                 <tr>
+                     <td>#{{ s.id }}</td>
+                     <td>{{ s.assunto }}</td>
+                     <td>
+                         <span class="badge 
+                            {% if s.status == 'ABERTO' %}bg-primary
+                            {% elif s.status == 'EM_ANDAMENTO' %}bg-warning text-dark
+                            {% else %}bg-success{% endif %}">
+                            {{ s.status }}
+                        </span>
+                     </td>
+                     <td>{{ s.data_criacao.strftime('%d/%m/%Y %H:%M') }}</td>
+                     <td>
+                        {% if s.resposta_atendente %}
+                            <div class="p-2 bg-light rounded small border">
+                                {{ s.resposta_atendente }}
+                            </div>
+                        {% else %}
+                            <span class="text-muted italic small">Aguardando resposta...</span>
+                        {% endif %}
+                     </td>
+                 </tr>
+                 {% endfor %}
+             </tbody>
+        </table>
+    </div>
+    {% if not solicitacoes %}
+    <p class="text-center text-muted my-4">Nenhuma solicitação encontrada.</p>
+    {% endif %}
+</div>
+{% endblock %}

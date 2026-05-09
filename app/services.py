@@ -36,13 +36,19 @@ def responder_solicitacao(solicitacao_id, resposta, novo_status):
     return None
 
 def obter_estatisticas_admin():
+    total = Solicitacao.query.count()
     abertos = Solicitacao.query.filter_by(status='ABERTO').count()
     em_andamento = Solicitacao.query.filter_by(status='EM_ANDAMENTO').count()
     resolvidos = Solicitacao.query.filter_by(status='RESOLVIDO').count()
+    
+    recentes = Solicitacao.query.order_by(Solicitacao.data_criacao.desc()).limit(5).all()
+    
     return {
+        'total': total,
         'abertos': abertos,
         'em_andamento': em_andamento,
-        'resolvidos': resolvidos
+        'resolvidos': resolvidos,
+        'recentes': recentes
     }
 
 def listar_solicitacoes_cliente(cliente_id):

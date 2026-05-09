@@ -1,10 +1,122 @@
 {% extends "base.html" %}
-{% block title %}Dashboard Admin{% endblock %}
+
+{% block title %}Painel Administrativo - UAB{% endblock %}
+
 {% block content %}
-<h2>Dashboard Admin</h2>
-<ul>
-    <li>Abertos: {{ dados.abertos }}</li>
-    <li>Em Andamento: {{ dados.em_andamento }}</li>
-    <li>Resolvidos: {{ dados.resolvidos }}</li>
-</ul>
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fas fa-chart-line me-2"></i>Dashboard de Relatórios</h2>
+        <p class="text-muted">Visão geral do sistema de atendimento.</p>
+    </div>
+</div>
+
+<!-- Cartões de Resumo -->
+<div class="row mb-4 text-center">
+    <div class="col-md-3">
+        <div class="card bg-white p-3">
+            <h6 class="text-muted">Total de Chamados</h6>
+            <h2 class="fw-bold">{{ dados.total }}</h2>
+            <i class="fas fa-ticket-alt text-secondary fa-2x mt-2"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-white p-3">
+            <h6 class="text-primary">Abertos</h6>
+            <h2 class="fw-bold">{{ dados.abertos }}</h2>
+            <i class="fas fa-envelope-open text-primary fa-2x mt-2"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-white p-3">
+            <h6 class="text-warning">Em Andamento</h6>
+            <h2 class="fw-bold">{{ dados.em_andamento }}</h2>
+            <i class="fas fa-spinner text-warning fa-2x mt-2"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-white p-3">
+            <h6 class="text-success">Resolvidos</h6>
+            <h2 class="fw-bold">{{ dados.resolvidos }}</h2>
+            <i class="fas fa-check-circle text-success fa-2x mt-2"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <!-- Gráfico -->
+    <div class="col-md-5 mb-4">
+        <div class="card h-100 p-4">
+            <h5 class="fw-bold mb-4">Distribuição por Status</h5>
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Chamados Recentes -->
+    <div class="col-md-7 mb-4">
+        <div class="card h-100 p-4">
+            <h5 class="fw-bold mb-4">Chamados Recentes</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Assunto</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in dados.recentes %}
+                        <tr>
+                            <td>#{{ item.id }}</td>
+                            <td>{{ item.assunto }}</td>
+                            <td>{{ item.data_criacao.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if item.status == 'ABERTO' %}bg-primary
+                                    {% elif item.status == 'EM_ANDAMENTO' %}bg-warning text-dark
+                                    {% else %}bg-success{% endif %}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if not dados.recentes %}
+            <p class="text-center text-muted">Nenhum chamado registrado.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Abertos', 'Em Andamento', 'Resolvidos'],
+                datasets: [{
+                    data: [{{ dados.abertos }}, {{ dados.em_andamento }}, {{ dados.resolvidos }}],
+                    backgroundColor: ['#0d6efd', '#fd7e14', '#198754'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    });
+</script>
 {% endblock %}
