@@ -265,4 +265,46 @@ Abaixo está a especificação técnica detalhada, estruturada de forma determin
         host = os.getenv('FLASK_HOST', '127.0.0.1')
         port = int(os.getenv('FLASK_PORT', 5000))
         app.run(host=host, port=port, debug=True) # debug=True para desenvolvimento
+
+## 6. Especificação de Frontend
+
+### 6.1 Design System e Identidade Visual
+*   **Paleta de Cores**:
+    *   Primária: `#0d6efd` (Blue Bootstrap)
+    *   Sucesso: `#198754` (Green)
+    *   Aviso: `#ffc107` (Yellow)
+    *   Erro/Perigo: `#dc3545` (Red)
+    *   Fundo: `#f8f9fa` (Light Gray)
+    *   Texto Principal: `#212529`
+*   **Tipografia**: Sans-serif (Inter, system-ui).
+*   **Componentes**:
+    *   **Cards**: Border-radius de 10px, sombra leve (`box-shadow: 0 4px 6px rgba(0,0,0,0.1)`).
+    *   **Botões**: Altura mínima de 44px para mobile (área de toque).
+    *   **Badges**: Arredondadas para indicação de status.
+
+### 6.2 Responsividade
+*   **Mobile (< 768px)**:
+    *   Formulários ocupam 100% da largura.
+    *   Tabelas com `overflow-x: auto`.
+    *   Menu hambúrguer para navegação.
+*   **Tablet (768px - 1024px)**:
+    *   Grids de 2 colunas para cards de resumo.
+*   **Desktop (> 1024px)**:
+    *   Layout centralizado com container de 1140px.
+
+### 6.3 Acessibilidade (A11y)
+*   **Navegação**: Foco visível em todos os elementos interativos.
+*   **ARIA**: Uso de `aria-label` em botões de ícone e `role="alert"` em mensagens de erro.
+*   **Contraste**: Garantir proporção mínima de 4.5:1 para textos.
+*   **Semântica**: Uso correto de `<main>`, `<nav>`, `<h1>`-`<h6>`.
+
+### 6.4 Estados e Feedbacks
+*   **Carregamento**: Uso de spinners Bootstrap em botões durante o submit.
+*   **Vazio (Empty States)**: Ilustração ou ícone centralizado com texto instrutivo quando não houver dados.
+*   **Erro**: Alertas (`.alert-danger`) fixos no topo do formulário ou toast notifications.
+*   **Sucesso**: Redirect com mensagens flash informativas.
+
+### 6.5 Fluxos de Navegação
+*   **Breadcrumbs**: Presentes em páginas de detalhe/edição para facilitar o retorno.
+*   **Feedback de Ação**: Botões mudam de estado (disabled) após clique para evitar submissões duplas.
     ```

@@ -4,43 +4,46 @@
 
 {% block content %}
 <div class="row justify-content-center mt-5">
-    <div class="col-md-4">
+    <div class="col-md-5 col-lg-4">
         <div class="card p-4">
-            <div class="text-center mb-4">
-                <i class="fas fa-user-circle fa-4x text-primary"></i>
-                <h2 class="mt-2 fw-bold">Login</h2>
-            </div>
+            <header class="text-center mb-4">
+                <i class="fas fa-user-circle fa-4x text-primary mb-3" aria-hidden="true"></i>
+                <h1 class="h2 fw-bold">Login</h1>
+                <p class="text-muted">Acesse sua conta para continuar</p>
+            </header>
 
             {% if erro %}
-                <div class="alert alert-danger" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i>{{ erro }}
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <i class="fas fa-exclamation-circle me-2" aria-hidden="true"></i>
+                    <div>{{ erro }}</div>
                 </div>
             {% endif %}
 
-            <form method="POST">
+            <form method="POST" aria-label="Formulário de Login">
                 <div class="mb-3">
-                    <label class="form-label">E-mail</label>
+                    <label for="email" class="form-label fw-medium">E-mail</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                        <input type="email" name="email" class="form-control" placeholder="seu@email.com" required>
+                        <span class="input-group-text" id="email-icon"><i class="fas fa-envelope" aria-hidden="true"></i></span>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="exemplo@uab.com" required aria-describedby="email-icon">
                     </div>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">Senha</label>
+                    <label for="senha" class="form-label fw-medium">Senha</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" name="senha" class="form-control" placeholder="Sua senha" required>
+                        <span class="input-group-text" id="password-icon"><i class="fas fa-lock" aria-hidden="true"></i></span>
+                        <input type="password" id="senha" name="senha" class="form-control" placeholder="Sua senha" required aria-describedby="password-icon">
                     </div>
                 </div>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary btn-lg">
-                        Entrar <i class="fas fa-sign-in-alt ms-2"></i>
+                        <span>Entrar</span>
+                        <i class="fas fa-sign-in-alt ms-2" aria-hidden="true"></i>
                     </button>
                 </div>
             </form>
         </div>
-        <div class="text-center mt-3">
-            <p class="text-muted small">&copy; 2026 Sistema UAB</p>
+        <div class="text-center mt-4">
+            <p class="text-muted small">Esqueceu sua senha? Entre em contato com o suporte.</p>
         </div>
     </div>
 </div>

@@ -2,54 +2,74 @@
 {% block title %}Responder Solicitação{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-10 col-lg-8">
         <div class="row mb-4">
             <div class="col-12">
-                <h2 class="fw-bold"><i class="fas fa-reply me-2"></i>Responder Solicitação #{{ solicitacao.id }}</h2>
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ url_for('main.fila_atendimento') }}">Fila</a></li>
-                    <li class="breadcrumb-item active">Responder</li>
+                    <li class="breadcrumb-item active" aria-current="page">Responder #{{ solicitacao.id }}</li>
                   </ol>
                 </nav>
+                <h1 class="h2 fw-bold mb-1"><i class="fas fa-reply me-2 text-primary" aria-hidden="true"></i>Responder Solicitação</h1>
+                <p class="text-muted">Análise e resposta ao chamado do cliente.</p>
             </div>
         </div>
 
-        <div class="card p-4 mb-4">
-            <h5 class="fw-bold border-bottom pb-2 mb-3">Detalhes do Chamado</h5>
-            <div class="mb-3">
-                <label class="text-muted small d-block">Assunto</label>
-                <span class="fs-5 fw-medium">{{ solicitacao.assunto }}</span>
+        <div class="card mb-4">
+            <div class="card-header bg-white py-3">
+                <h2 class="h5 fw-bold mb-0">Detalhes do Chamado</h2>
             </div>
-            <div class="mb-3">
-                <label class="text-muted small d-block">Descrição</label>
-                <div class="p-3 bg-light rounded border">
-                    {{ solicitacao.descricao }}
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <span class="text-muted small text-uppercase fw-bold">Assunto:</span>
+                    </div>
+                    <div class="col-md-9">
+                        <span class="fs-5 fw-bold">{{ solicitacao.assunto }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <span class="text-muted small text-uppercase fw-bold">Descrição:</span>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="p-3 bg-light rounded border">
+                            {{ solicitacao.descricao }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="card p-4">
-            <h5 class="fw-bold border-bottom pb-2 mb-3">Sua Resposta</h5>
-            <form method="POST">
-                <div class="mb-3">
-                    <label class="form-label">Mensagem de Resposta</label>
-                    <textarea name="resposta" class="form-control" rows="5" placeholder="Escreva aqui a solução ou atualização..." required></textarea>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label">Atualizar Status para</label>
-                    <select name="status" class="form-select">
-                        <option value="EM_ANDAMENTO" {% if solicitacao.status == 'EM_ANDAMENTO' %}selected{% endif %}>Em Andamento</option>
-                        <option value="RESOLVIDO" {% if solicitacao.status == 'RESOLVIDO' %}selected{% endif %}>Resolvido</option>
-                    </select>
-                </div>
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-paper-plane me-1"></i>Enviar Resposta
-                    </button>
-                    <a href="{{ url_for('main.fila_atendimento') }}" class="btn btn-outline-secondary">Cancelar</a>
-                </div>
-            </form>
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h2 class="h5 fw-bold mb-0">Sua Resposta</h2>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" aria-label="Formulário de resposta ao cliente">
+                    <div class="mb-3">
+                        <label for="resposta" class="form-label fw-bold">Mensagem de Resposta</label>
+                        <textarea id="resposta" name="resposta" class="form-control" rows="6" placeholder="Escreva aqui a solução ou atualização detalhada..." required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="status" class="form-label fw-bold">Atualizar Status</label>
+                        <select id="status" name="status" class="form-select form-select-lg">
+                            <option value="EM_ANDAMENTO" {% if solicitacao.status == 'EM_ANDAMENTO' %}selected{% endif %}>Em Andamento</option>
+                            <option value="RESOLVIDO" {% if solicitacao.status == 'RESOLVIDO' %}selected{% endif %}>Resolvido (Finalizar)</option>
+                        </select>
+                    </div>
+                    <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('main.fila_atendimento') }}" class="btn btn-outline-secondary px-4 order-2 order-md-1">
+                            Voltar para Fila
+                        </a>
+                        <button type="submit" class="btn btn-success btn-lg px-5 order-1 order-md-2">
+                            <span>Enviar Resposta</span>
+                            <i class="fas fa-paper-plane ms-2" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

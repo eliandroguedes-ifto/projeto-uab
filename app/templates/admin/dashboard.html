@@ -5,88 +5,117 @@
 {% block content %}
 <div class="row mb-4">
     <div class="col-12">
-        <h2 class="fw-bold"><i class="fas fa-chart-line me-2"></i>Dashboard de Relatórios</h2>
-        <p class="text-muted">Visão geral do sistema de atendimento.</p>
+        <h1 class="h2 fw-bold mb-1"><i class="fas fa-chart-line me-2 text-primary" aria-hidden="true"></i>Dashboard de Relatórios</h1>
+        <p class="text-muted">Visão geral do desempenho e status do sistema.</p>
     </div>
 </div>
 
 <!-- Cartões de Resumo -->
-<div class="row mb-4 text-center">
-    <div class="col-md-3">
-        <div class="card bg-white p-3">
-            <h6 class="text-muted">Total de Chamados</h6>
-            <h2 class="fw-bold">{{ dados.total }}</h2>
-            <i class="fas fa-ticket-alt text-secondary fa-2x mt-2"></i>
+<div class="row mb-4 g-3">
+    <div class="col-6 col-md-3">
+        <div class="card h-100 border-start border-4 border-secondary">
+            <div class="card-body">
+                <h2 class="h6 text-muted text-uppercase fw-bold">Total</h2>
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="h2 fw-bold mb-0">{{ dados.total }}</span>
+                    <i class="fas fa-ticket-alt text-secondary fa-2x opacity-25" aria-hidden="true"></i>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card bg-white p-3">
-            <h6 class="text-primary">Abertos</h6>
-            <h2 class="fw-bold">{{ dados.abertos }}</h2>
-            <i class="fas fa-envelope-open text-primary fa-2x mt-2"></i>
+    <div class="col-6 col-md-3">
+        <div class="card h-100 border-start border-4 border-primary">
+            <div class="card-body">
+                <h2 class="h6 text-primary text-uppercase fw-bold">Abertos</h2>
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="h2 fw-bold mb-0">{{ dados.abertos }}</span>
+                    <i class="fas fa-envelope-open text-primary fa-2x opacity-25" aria-hidden="true"></i>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card bg-white p-3">
-            <h6 class="text-warning">Em Andamento</h6>
-            <h2 class="fw-bold">{{ dados.em_andamento }}</h2>
-            <i class="fas fa-spinner text-warning fa-2x mt-2"></i>
+    <div class="col-6 col-md-3">
+        <div class="card h-100 border-start border-4 border-warning">
+            <div class="card-body">
+                <h2 class="h6 text-warning text-uppercase fw-bold">Andamento</h2>
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="h2 fw-bold mb-0">{{ dados.em_andamento }}</span>
+                    <i class="fas fa-spinner text-warning fa-2x opacity-25" aria-hidden="true"></i>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card bg-white p-3">
-            <h6 class="text-success">Resolvidos</h6>
-            <h2 class="fw-bold">{{ dados.resolvidos }}</h2>
-            <i class="fas fa-check-circle text-success fa-2x mt-2"></i>
+    <div class="col-6 col-md-3">
+        <div class="card h-100 border-start border-4 border-success">
+            <div class="card-body">
+                <h2 class="h6 text-success text-uppercase fw-bold">Resolvidos</h2>
+                <div class="d-flex align-items-center justify-content-between">
+                    <span class="h2 fw-bold mb-0">{{ dados.resolvidos }}</span>
+                    <i class="fas fa-check-circle text-success fa-2x opacity-25" aria-hidden="true"></i>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="row mb-5">
+<div class="row mb-5 g-4">
     <!-- Gráfico -->
-    <div class="col-md-5 mb-4">
-        <div class="card h-100 p-4">
-            <h5 class="fw-bold mb-4">Distribuição por Status</h5>
-            <canvas id="statusChart"></canvas>
+    <div class="col-lg-5">
+        <div class="card h-100">
+            <div class="card-header bg-white py-3">
+                <h3 class="h6 fw-bold mb-0">Distribuição por Status</h3>
+            </div>
+            <div class="card-body d-flex align-items-center">
+                <div class="w-100" style="max-height: 300px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Chamados Recentes -->
-    <div class="col-md-7 mb-4">
-        <div class="card h-100 p-4">
-            <h5 class="fw-bold mb-4">Chamados Recentes</h5>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>Assunto</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in dados.recentes %}
-                        <tr>
-                            <td>#{{ item.id }}</td>
-                            <td>{{ item.assunto }}</td>
-                            <td>{{ item.data_criacao.strftime('%d/%m/%Y') }}</td>
-                            <td>
-                                <span class="badge 
-                                    {% if item.status == 'ABERTO' %}bg-primary
-                                    {% elif item.status == 'EM_ANDAMENTO' %}bg-warning text-dark
-                                    {% else %}bg-success{% endif %}">
-                                    {{ item.status }}
-                                </span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <div class="col-lg-7">
+        <div class="card h-100">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h3 class="h6 fw-bold mb-0">Atividades Recentes</h3>
+                <span class="badge bg-light text-dark">Últimos 10 chamados</span>
             </div>
-            {% if not dados.recentes %}
-            <p class="text-center text-muted">Nenhum chamado registrado.</p>
-            {% endif %}
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" aria-label="Lista de chamados recentes">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="ps-4">ID</th>
+                                <th scope="col">Assunto</th>
+                                <th scope="col">Data</th>
+                                <th scope="col" class="pe-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in dados.recentes %}
+                            <tr>
+                                <td class="ps-4 fw-medium">#{{ item.id }}</td>
+                                <td class="fw-bold">{{ item.assunto }}</td>
+                                <td>{{ item.data_criacao.strftime('%d/%m/%Y') }}</td>
+                                <td class="pe-4">
+                                    <span class="badge-status 
+                                        {% if item.status == 'ABERTO' %}bg-primary text-white
+                                        {% elif item.status == 'EM_ANDAMENTO' %}bg-warning text-dark
+                                        {% else %}bg-success text-white{% endif %}">
+                                        {{ item.status.replace('_', ' ') }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if not dados.recentes %}
+                <div class="text-center py-5">
+                    <p class="text-muted mb-0">Nenhum chamado registrado no sistema.</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
@@ -102,19 +131,28 @@
                 labels: ['Abertos', 'Em Andamento', 'Resolvidos'],
                 datasets: [{
                     data: [{{ dados.abertos }}, {{ dados.em_andamento }}, {{ dados.resolvidos }}],
-                    backgroundColor: ['#0d6efd', '#fd7e14', '#198754'],
+                    backgroundColor: ['#0d6efd', '#ffc107', '#198754'],
                     borderWidth: 0,
-                    hoverOffset: 4
+                    hoverOffset: 10
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'bottom'
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        }
                     }
                 },
-                cutout: '70%'
+                cutout: '75%'
             }
         });
     });

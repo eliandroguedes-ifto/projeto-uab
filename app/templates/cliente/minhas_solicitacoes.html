@@ -3,49 +3,49 @@
 {% block content %}
 <div class="row mb-4 align-items-center">
     <div class="col-md-8">
-        <h2 class="fw-bold"><i class="fas fa-history me-2"></i>Minhas Solicitações</h2>
-        <p class="text-muted">Acompanhe o andamento dos seus chamados.</p>
+        <h1 class="h2 fw-bold mb-1"><i class="fas fa-history me-2" aria-hidden="true"></i>Minhas Solicitações</h1>
+        <p class="text-muted">Acompanhe o status e as respostas dos seus chamados.</p>
     </div>
-    <div class="col-md-4 text-md-end">
-        <a href="{{ url_for('main.nova_solicitacao') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-1"></i>Nova Solicitação
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('main.nova_solicitacao') }}" class="btn btn-primary btn-lg w-100 w-md-auto">
+            <i class="fas fa-plus me-2" aria-hidden="true"></i>Nova Solicitação
         </a>
     </div>
 </div>
 
-<div class="card p-4">
+<div class="card overflow-hidden">
     <div class="table-responsive">
-        <table class="table table-hover align-middle">
+        <table class="table table-hover align-middle mb-0" aria-label="Lista de suas solicitações">
              <thead class="table-light">
                  <tr>
-                     <th>ID</th>
-                     <th>Assunto</th>
-                     <th>Status</th>
-                     <th>Data</th>
-                     <th>Resposta do Atendente</th>
+                     <th scope="col" class="ps-4">ID</th>
+                     <th scope="col">Assunto</th>
+                     <th scope="col">Status</th>
+                     <th scope="col">Data</th>
+                     <th scope="col" class="pe-4">Última Resposta</th>
                  </tr>
              </thead>
              <tbody>
                  {% for s in solicitacoes %}
                  <tr>
-                     <td>#{{ s.id }}</td>
-                     <td>{{ s.assunto }}</td>
+                     <td class="ps-4 fw-medium text-muted">#{{ s.id }}</td>
+                     <td class="fw-bold">{{ s.assunto }}</td>
                      <td>
-                         <span class="badge 
-                            {% if s.status == 'ABERTO' %}bg-primary
+                         <span class="badge-status 
+                            {% if s.status == 'ABERTO' %}bg-primary text-white
                             {% elif s.status == 'EM_ANDAMENTO' %}bg-warning text-dark
-                            {% else %}bg-success{% endif %}">
-                            {{ s.status }}
+                            {% else %}bg-success text-white{% endif %}">
+                            {{ s.status.replace('_', ' ') }}
                         </span>
                      </td>
-                     <td>{{ s.data_criacao.strftime('%d/%m/%Y %H:%M') }}</td>
-                     <td>
-                        {% if s.resposta_atendente %}
-                            <div class="p-2 bg-light rounded small border">
-                                {{ s.resposta_atendente }}
+                     <td>{{ s.data_criacao.strftime('%d/%m/%Y') }}<br><small class="text-muted">{{ s.data_criacao.strftime('%H:%M') }}</small></td>
+                     <td class="pe-4">
+                        {% if s.status == 'RESOLVIDO' or s.resposta_atendente %}
+                            <div class="p-3 bg-light rounded border-start border-primary border-4 small">
+                                <p class="mb-0 text-dark">{{ s.resposta_atendente or 'Chamado resolvido.' }}</p>
                             </div>
                         {% else %}
-                            <span class="text-muted italic small">Aguardando resposta...</span>
+                            <span class="text-muted fst-italic"><i class="far fa-clock me-1"></i>Aguardando...</span>
                         {% endif %}
                      </td>
                  </tr>
@@ -53,8 +53,18 @@
              </tbody>
         </table>
     </div>
+    
     {% if not solicitacoes %}
-    <p class="text-center text-muted my-4">Nenhuma solicitação encontrada.</p>
+    <div class="text-center py-5">
+        <div class="mb-3">
+            <i class="fas fa-clipboard-list fa-4x text-light"></i>
+        </div>
+        <h3 class="h5 fw-bold text-muted">Nenhuma solicitação encontrada</h3>
+        <p class="text-muted">Você ainda não abriu nenhum chamado de atendimento.</p>
+        <a href="{{ url_for('main.nova_solicitacao') }}" class="btn btn-outline-primary mt-2">
+            Começar agora
+        </a>
+    </div>
     {% endif %}
 </div>
 {% endblock %}

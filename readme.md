@@ -1,6 +1,12 @@
 # Sistema de Atendimento ao Cliente
 
-Este é um sistema web de atendimento ao cliente desenvolvido com Flask.
+Este é um sistema web de atendimento ao cliente desenvolvido com Flask, focado em usabilidade, acessibilidade (A11y) e design responsivo.
+
+## Características do Frontend
+
+- **Acessibilidade**: Seguindo padrões WCAG com ARIA labels e navegação por teclado.
+- **Responsividade**: Interface adaptável para Mobile, Tablet e Desktop usando Bootstrap 5.
+- **UX**: Feedbacks visuais de carregamento, estados vazios e mensagens de alerta.
 
 ## Requisitos
 

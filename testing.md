@@ -48,6 +48,15 @@ A implementação seguirá o ciclo **Red-Green-Refactor**:
 | :--- | :--- | :--- |
 | Estatísticas | Cálculo correto de totais | Validar se o dashboard soma corretamente os chamados por status ('ABERTO', etc). |
 
+### 2.5 Interface e Experiência do Usuário (Frontend)
+| Funcionalidade | Cenário | Objetivo |
+| :--- | :--- | :--- |
+| Responsividade | Visualização em Mobile (375px) | Garantir que o menu colapse e as tabelas tenham scroll horizontal. |
+| Acessibilidade | Navegação por Teclado | Verificar se o foco percorre todos os links e campos de formulário via TAB. |
+| Feedback | Estado de Carregamento | Mostrar spinner no botão de envio após o clique. |
+| Estados Vazios | Lista sem chamados | Exibir mensagem "Nenhuma solicitação encontrada" com ícone adequado. |
+| Validação | Campos obrigatórios vazios | Garantir que o browser bloqueie o envio e mostre mensagem de erro. |
+
 ---
 
 ## 3. Implementação dos Testes (Exemplos de Referência)
