@@ -2,18 +2,25 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
 from flask_bcrypt import Bcrypt
+from flask_caching import Cache
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
+cache = Cache()
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'uma-chave-secreta-padrao')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///../instance/database.sqlite')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    # Configuração de Cache (Simple Cache para este escopo)
+    app.config['CACHE_TYPE'] = 'SimpleCache'
+    app.config['CACHE_DEFAULT_TIMEOUT'] = 300
 
     db.init_app(app)
     bcrypt.init_app(app)
+    cache.init_app(app)
 
     with app.app_context():
         from app import models # Importar models para que db.create_all() funcione

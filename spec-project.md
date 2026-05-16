@@ -86,125 +86,22 @@ Abaixo está a especificação técnica detalhada, estruturada de forma determin
 ## 3. Lógica de Negócio (Services)
 
 ### /app/services.py
-*   **Ação**: criar
-*   **Descrição**: Módulo que encapsula as regras de negócio de autenticação, usuários e solicitações.
-*   **Pseudocódigo**:
-    ```python
-    from app import db
-    from app.models import Usuario, Solicitacao
-    from flask_bcrypt import Bcrypt
-    from datetime import datetime
-
-    bcrypt = Bcrypt()
-
-    def autenticar_usuario(email_entrada, senha_entrada):
-        usuario = Usuario.query.filter_by(email=email_entrada).first()
-        if usuario and bcrypt.check_password_hash(usuario.senha_hash, senha_entrada):
-            return usuario
-        return None
-
-    def registrar_cliente(nome, email, senha_plana):
-        if Usuario.query.filter_by(email=email).first():
-            return "Erro: Email já em uso"
-        hash_senha = bcrypt.generate_password_hash(senha_plana).decode('utf-8')
-        novo_cliente = Usuario(nome=nome, email=email, senha_hash=hash_senha, perfil='CLIENTE')
-        db.session.add(novo_cliente)
-        db.session.commit()
-        return novo_cliente
-
-    def criar_solicitacao(cliente_id, assunto, descricao):
-        nova_solicitacao = Solicitacao(cliente_id=cliente_id, assunto=assunto, descricao=descricao)
-        db.session.add(nova_solicitacao)
-        db.session.commit()
-        return nova_solicitacao
-
-    def responder_solicitacao(solicitacao_id, resposta, novo_status):
-        solicitacao = Solicitacao.query.get(solicitacao_id)
-        if solicitacao:
-            solicitacao.resposta_atendente = resposta
-            solicitacao.status = novo_status
-            db.session.commit()
-            return solicitacao
-        return None
-
-    def obter_estatisticas_admin():
-        abertos = Solicitacao.query.filter_by(status='ABERTO').count()
-        em_andamento = Solicitacao.query.filter_by(status='EM_ANDAMENTO').count()
-        resolvidos = Solicitacao.query.filter_by(status='RESOLVIDO').count()
-        return {
-            'abertos': abertos,
-            'em_andamento': em_andamento,
-            'resolvidos': resolvidos
-        }
-    ```
+*   **Ação**: refatorar
+*   **Descrição**: Módulo centralizado de lógica de negócio com otimizações de desempenho.
+*   **Recursos Otimizados**:
+    *   **Cache**: Implementação de `Flask-Caching` (SimpleCache) para estatísticas do dashboard admin (timeout: 300s). Invalidação automática em escritas.
+    *   **Jobs/Filas**: Simulação de processamento assíncrono usando `threading.Thread` para notificações de criação e resposta de chamados.
+    *   **Modularidade**: Organização das funções por domínio (Auth, Ticket, Admin).
 
 ## 4. Controladores (Routes)
 
 ### /app/routes.py
-*   **Ação**: criar
-*   **Descrição**: Mapeamento de rotas HTTP, extração de parâmetros de requisição e injeção de dados nas views.
-*   **Pseudocódigo**:
-    ```python
-    from flask import Blueprint, request, session, render_template, redirect, url_for
-    from app import services
-
-    routes = Blueprint('main', __name__)
-
-    @routes.route('/login', methods=['GET', 'POST'])
-    def login():
-        if request.method == 'POST':
-            usuario = services.autenticar_usuario(request.form['email'], request.form['senha'])
-            if usuario:
-                session['usuario_id'] = usuario.id
-                session['perfil'] = usuario.perfil
-                return redirect(url_for('main.index')) # Assumindo uma rota 'index'
-            else:
-                return render_template('login.html', erro="Credenciais inválidas")
-        return render_template('login.html')
-
-    @routes.route('/cliente/nova-solicitacao', methods=['GET', 'POST'])
-    def nova_solicitacao():
-        if 'perfil' not in session or session['perfil'] != 'CLIENTE':
-            return redirect(url_for('main.login'))
-        if request.method == 'POST':
-            services.criar_solicitacao(session['usuario_id'], request.form['assunto'], request.form['descricao'])
-            return redirect(url_for('main.minhas_solicitacoes')) # Assumindo rota 'minhas_solicitacoes'
-        return render_template('cliente/nova_solicitacao.html')
-
-    @routes.route('/atendente/responder/<int:id>', methods=['POST'])
-    def responder_solicitacao_route(id):
-        if 'perfil' not in session or session['perfil'] != 'ATENDENTE':
-            return redirect(url_for('main.login'))
-        services.responder_solicitacao(id, request.form['resposta'], request.form['status'])
-        return redirect(url_for('main.fila_atendimento')) # Assumindo rota 'fila_atendimento'
-
-    @routes.route('/admin/dashboard', methods=['GET'])
-    def admin_dashboard():
-        if 'perfil' not in session or session['perfil'] != 'ADMIN':
-            return redirect(url_for('main.login'))
-        estatisticas = services.obter_estatisticas_admin()
-        return render_template('admin/dashboard.html', dados=estatisticas)
-
-    @routes.route('/')
-    def index():
-        if 'usuario_id' in session:
-            if session['perfil'] == 'CLIENTE':
-                return redirect(url_for('main.minhas_solicitacoes'))
-            elif session['perfil'] == 'ATENDENTE':
-                return redirect(url_for('main.fila_atendimento'))
-            elif session['perfil'] == 'ADMIN':
-                return redirect(url_for('main.admin_dashboard'))
-        return redirect(url_for('main.login'))
-
-    # Rotas placeholder para completude
-    @routes.route('/cliente/minhas-solicitacoes')
-    def minhas_solicitacoes():
-        return "Página de Minhas Solicitações (Implementar)"
-
-    @routes.route('/atendente/fila')
-    def fila_atendimento():
-        return "Página da Fila de Atendimento (Implementar)"
-    ```
+*   **Ação**: refatorar
+*   **Descrição**: Gerenciamento de rotas com segurança e feedback aprimorados.
+*   **Melhorias de Refatoração**:
+    *   **Decorator de Autorização**: Uso de `@login_required(perfil=...)` para eliminar duplicidade de verificações de sessão e perfil.
+    *   **Feedback ao Usuário**: Implementação de `flash` messages para confirmar ações (criação, resposta, erro).
+    *   **Simplicidade**: Delegação total da lógica de busca e persistência para o módulo de Services.
 
 ## 5. Inicialização da Aplicação
 

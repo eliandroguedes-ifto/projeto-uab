@@ -1,7 +1,21 @@
-from flask import Blueprint, request, session, render_template, redirect, url_for
+from flask import Blueprint, request, session, render_template, redirect, url_for, flash
 from app import services
+from functools import wraps
 
 routes = Blueprint('main', __name__)
+
+def login_required(perfil=None):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'usuario_id' not in session:
+                return redirect(url_for('main.login'))
+            if perfil and session.get('perfil') != perfil:
+                flash('Acesso negado: Permissão insuficiente.', 'danger')
+                return redirect(url_for('main.index'))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 @routes.route('/login', methods=['GET', 'POST'])
 def login():
@@ -21,57 +35,54 @@ def logout():
     return redirect(url_for('main.login'))
 
 @routes.route('/cliente/nova-solicitacao', methods=['GET', 'POST'])
+@login_required(perfil='CLIENTE')
 def nova_solicitacao():
-    if 'perfil' not in session or session['perfil'] != 'CLIENTE':
-        return redirect(url_for('main.login'))
     if request.method == 'POST':
         services.criar_solicitacao(session['usuario_id'], request.form['assunto'], request.form['descricao'])
+        flash('Solicitação criada com sucesso!', 'success')
         return redirect(url_for('main.minhas_solicitacoes'))
     return render_template('cliente/nova_solicitacao.html')
 
 @routes.route('/cliente/minhas-solicitacoes')
+@login_required(perfil='CLIENTE')
 def minhas_solicitacoes():
-    if 'perfil' not in session or session['perfil'] != 'CLIENTE':
-        return redirect(url_for('main.login'))
     solicitacoes = services.listar_solicitacoes_cliente(session['usuario_id'])
     return render_template('cliente/minhas_solicitacoes.html', solicitacoes=solicitacoes)
 
 @routes.route('/atendente/fila')
+@login_required(perfil='ATENDENTE')
 def fila_atendimento():
-    if 'perfil' not in session or session['perfil'] != 'ATENDENTE':
-        return redirect(url_for('main.login'))
     solicitacoes = services.listar_fila_atendimento()
     return render_template('atendente/fila.html', solicitacoes=solicitacoes)
 
 @routes.route('/atendente/responder/<int:id>', methods=['GET', 'POST'])
+@login_required(perfil='ATENDENTE')
 def responder_solicitacao_route(id):
-    if 'perfil' not in session or session['perfil'] != 'ATENDENTE':
-        return redirect(url_for('main.login'))
-    
     if request.method == 'POST':
         services.responder_solicitacao(id, request.form['resposta'], request.form['status'])
+        flash(f'Solicitação #{id} respondida.', 'success')
         return redirect(url_for('main.fila_atendimento'))
     
-    # Adicionando GET para mostrar o formulário de resposta
-    from app.models import Solicitacao
-    from app import db
-    solicitacao = db.session.get(Solicitacao, id)
+    solicitacao = services.buscar_solicitacao_por_id(id)
+    if not solicitacao:
+        flash('Solicitação não encontrada.', 'warning')
+        return redirect(url_for('main.fila_atendimento'))
     return render_template('atendente/responder.html', solicitacao=solicitacao)
 
 @routes.route('/admin/dashboard', methods=['GET'])
+@login_required(perfil='ADMIN')
 def admin_dashboard():
-    if 'perfil' not in session or session['perfil'] != 'ADMIN':
-        return redirect(url_for('main.login'))
     estatisticas = services.obter_estatisticas_admin()
     return render_template('admin/dashboard.html', dados=estatisticas)
 
 @routes.route('/')
 def index():
     if 'usuario_id' in session:
-        if session['perfil'] == 'CLIENTE':
+        perfil = session.get('perfil')
+        if perfil == 'CLIENTE':
             return redirect(url_for('main.minhas_solicitacoes'))
-        elif session['perfil'] == 'ATENDENTE':
+        elif perfil == 'ATENDENTE':
             return redirect(url_for('main.fila_atendimento'))
-        elif session['perfil'] == 'ADMIN':
+        elif perfil == 'ADMIN':
             return redirect(url_for('main.admin_dashboard'))
     return redirect(url_for('main.login'))

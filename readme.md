@@ -13,6 +13,15 @@ Este é um sistema web de atendimento ao cliente desenvolvido com Flask, focado 
 - Python 3.11+
 - Dependências listadas em `requirements.txt`
 
+## Otimização e Performance
+
+O sistema foi refatorado para suportar alto desempenho e escalabilidade:
+
+- **Cache de Dados**: Estatísticas do Dashboard são mantidas em memória para reduzir carga no banco de dados.
+- **Processamento Assíncrono**: Tarefas de notificação são executadas em threads de background, garantindo respostas rápidas aos usuários.
+- **Arquitetura Modular**: Código organizado em serviços especializados com baixo acoplamento.
+- **Segurança**: Proteção de rotas centralizada via decorators.
+
 ## Instalação
 
 1. Crie um ambiente virtual:

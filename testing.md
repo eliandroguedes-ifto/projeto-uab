@@ -57,6 +57,14 @@ A implementação seguirá o ciclo **Red-Green-Refactor**:
 | Estados Vazios | Lista sem chamados | Exibir mensagem "Nenhuma solicitação encontrada" com ícone adequado. |
 | Validação | Campos obrigatórios vazios | Garantir que o browser bloqueie o envio e mostre mensagem de erro. |
 
+### 2.6 Otimização e Desempenho
+| Funcionalidade | Cenário | Objetivo |
+| :--- | :--- | :--- |
+| Cache | Hits no Dashboard Admin | Verificar se acessos subsequentes ao dashboard são servidos pelo cache (tempo reduzido). |
+| Invalidação | Limpeza após nova solicitação | Garantir que o cache seja invalidado quando um novo chamado for criado, forçando a atualização dos dados. |
+| Background Jobs | Execução de threads | Validar que o fluxo principal não é bloqueado por tarefas de "notificação" simuladas. |
+| Decorators | Proteção de rota via @login_required | Confirmar se o decorator redireciona corretamente usuários não autenticados ou sem permissão. |
+
 ---
 
 ## 3. Implementação dos Testes (Exemplos de Referência)
